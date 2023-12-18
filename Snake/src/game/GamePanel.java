@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.util.Random;
 //import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener{
 	private static final int SCREEN_WIDTH = 600;
 	private static final int SCREEN_HEIGHT = 600;
