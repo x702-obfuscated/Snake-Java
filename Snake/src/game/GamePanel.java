@@ -15,11 +15,13 @@ import java.util.Random;
 
 @SuppressWarnings("serial")
 public class GamePanel extends JPanel implements ActionListener{
+	//Settings
 	private static final int SCREEN_WIDTH = 600;
 	private static final int SCREEN_HEIGHT = 600;
 	private static final int UNIT_SIZE = 25;
 	private static final int GAME_UNITS = (SCREEN_WIDTH*SCREEN_HEIGHT)/UNIT_SIZE;
-	private static final int DELAY = 75; //higher the number slower the game. 
+	private static final int DELAY = 100; //higher the number slower the game. 
+	private static final boolean edgeCollisions = false;
 	
 	private static final Color snakeHeadColor = new Color(0,255,0);
 	private static final Color snakeBodyColor = new Color(0,255,0);//ex Color.red or new Color(255,255,255);
@@ -38,6 +40,7 @@ public class GamePanel extends JPanel implements ActionListener{
 	Timer timer;
 	Random random; 
 
+
 	
 	GamePanel(){
 		random = new Random();
@@ -46,7 +49,9 @@ public class GamePanel extends JPanel implements ActionListener{
 		this.setFocusable(true);
 		this.addKeyListener(new MyKeyAdapter());
 		startGame();
+
 	}
+	
 	
 	public void startGame() {
 		newApple();
@@ -129,18 +134,33 @@ public class GamePanel extends JPanel implements ActionListener{
 			}
 		}
 		
-		//checks if head collides with left border
-		if(x[0] < 0) {
-			running = false;
+		if(edgeCollisions) {
+			checkEdgeCollisions();
+		}
+		else {
+			wrapAroundEdges();
 		}
 		
-		//checks if head collides with right border
-		if(x[0] > SCREEN_WIDTH) {
+		
+		
+		if (!running) {
+			timer.stop();
+		}
+	}
+	
+	public void checkEdgeCollisions() {
+		// checks if head collides with left border
+		if (x[0] < 0) {
 			running = false;
 		}
-		
-		//checks if head collides with upper border
-		if(y[0] < 0) {
+
+		// checks if head collides with right border
+		if (x[0] > SCREEN_WIDTH) {
+			running = false;
+		}
+
+		// checks if head collides with upper border
+		if (y[0] < 0) {
 			running = false;
 		}
 
@@ -148,9 +168,27 @@ public class GamePanel extends JPanel implements ActionListener{
 		if (y[0] > SCREEN_HEIGHT) {
 			running = false;
 		}
-		
-		if (!running) {
-			timer.stop();
+	}
+	
+	public void wrapAroundEdges() {
+		// checks if head collides with left border
+		if (x[0] < 0) {
+			x[0] = SCREEN_WIDTH;
+		}
+
+		// checks if head collides with right border
+		if (x[0] > SCREEN_WIDTH) {
+			x[0] = 0;
+		}
+
+		// checks if head collides with upper border
+		if (y[0] < 0) {
+			y[0] = SCREEN_HEIGHT;
+		}
+
+		// checks if head collides with lower border
+		if (y[0] > SCREEN_HEIGHT) {
+			y[0] = 0;
 		}
 	}
 
